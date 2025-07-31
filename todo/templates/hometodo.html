@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple To-Do List</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<h2>To-Do List</h2>
+
+<h3>Enter the task:</h3>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="taskname" placeholder="Enter your task" required>
+    <input type="date" name="startdate" required>
+    <input type="date" name="enddate" required>
+    <button type="submit" name="action" value="submit">Submit</button>
+</form>
+
+<h3>Task List:</h3>
+<table>
+    <tr>
+        <th>S.No</th>
+        <th>Task Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+    </tr>
+    {% for i in tasks %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.taskname }}</td>
+        <td>{{ i.startdate }}</td>
+        <td>{{ i.enddate }}</td>
+        <td>
+            <a href="{% url "update" i.id%}">Update</a>
+            <a href="{% url "delete" i.id%}">Delete</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">No tasks yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

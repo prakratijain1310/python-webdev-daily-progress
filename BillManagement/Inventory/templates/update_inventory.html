@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inventory Details</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Inventory Details:</h2>
+
+<h3>Enter the product details:</h3>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="productname" placeholder="Enter product name" required>
+    <input type="text" name="price" placeholder="Enter price" required>
+    <input type="text" name="quantity" placeholder="Enter quantity" required>
+    <input type="text" name="discount" placeholder="Enter discount percentage" required>
+    
+    <button type="submit" name="action" value="submit">Submit</button>
+</form>
+
+<h3>Task List:</h3>
+<table>
+    <tr>
+        <th>S.No</th>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Discount</th>
+        <th>Actions</th>
+    </tr>
+    
+</table>
+
+</body>
+</html>

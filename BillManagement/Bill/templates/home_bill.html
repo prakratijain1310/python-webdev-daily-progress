@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inventory Entry</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h2, h3 {
+      color: #333;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    input[type="text"], input[type="email"] {
+      width: calc(50% - 12px);
+      padding: 10px;
+      margin: 10px 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin: 10px 5px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .product-group {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .product-group input {
+      width: calc(25% - 12px);
+    }
+
+    .remove-button {
+      background-color: red;
+      margin-top: 12px;
+    }
+
+    .bill-section {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    function addProductGroup() {
+      const productContainer = document.getElementById('products');
+
+      const div = document.createElement('div');
+      div.className = 'product-group';
+
+      div.innerHTML = `
+        <input type="text" name="productname[]" placeholder="Product name" required>
+        <input type="text" name="price[]" placeholder="Price" required>
+        <input type="text" name="quantity[]" placeholder="Quantity" required>
+        <input type="text" name="discount[]" placeholder="Discount %" required>
+        <button type="button" class="remove-button" onclick="removeProduct(this)">❌</button>
+      `;
+
+      productContainer.appendChild(div);
+    }
+
+    function removeProduct(button) {
+      button.parentElement.remove();
+    }
+  </script>
+</head>
+<body>
+
+<h2>Inventory Billing</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <h3>Customer Details</h3>
+  <div class="form-group">
+    <input type="text" name="customername" placeholder="Customer name" required>
+    <input type="text" name="mobile" placeholder="Mobile number" required>
+    <input type="email" name="email" placeholder="Email address" required>
+    <input type="text" name="address" placeholder="Address" required>
+  </div>
+
+  <h3>Product Details</h3>
+  <div id="products">
+    <div class="product-group">
+      <input type="text" name="productname[]" placeholder="Product name" required>
+      <input type="text" name="price[]" placeholder="Price" required>
+      <input type="text" name="quantity[]" placeholder="Quantity" required>
+      <input type="text" name="discount[]" placeholder="Discount %" required>
+    </div>
+  </div>
+
+  <button type="button" onclick="addProductGroup()">➕ Add Product</button>
+  <button type="submit">Submit</button>
+</form>
+
+<!-- Bill Section -->
+{% if data1 %}
+  <div class="bill-section">
+    <h3>Bill for {{ data1.name }}</h3>
+    <p><strong>Mobile:</strong> {{ data1.mobile }}</p>
+    <p><strong>Email:</strong> {{ data1.email }}</p>
+    <p><strong>Address:</strong> {{ data1.address }}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price (₹)</th>
+          <th>Quantity</th>
+          <th>Discount (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data2 %}
+        <tr>
+          <td>{{ item.productname }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.discount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+
+</body>
+</html>
