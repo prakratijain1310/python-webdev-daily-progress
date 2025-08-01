@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Appointments</title>
+</head>
+<body>
+
+  <h2>All Appointments</h2>
+
+  <ul>
+    {% for a in appointments %}
+      <li>
+        {{ a.name }} - {{ a.number }}<br>
+        {{ a.date }} at {{ a.time }}
+      </li><br>
+    {% endfor %}
+  </ul>
+
+</body>
+</html>
