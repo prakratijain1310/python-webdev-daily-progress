@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; text-align: center; }
+
+        /* ✅ Product grid for 4 in a row */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            justify-items: center;
+            margin-top: 20px;
+            padding: 0 50px;
+        }
+
+        .product-card {
+            background: white; padding: 15px;
+            border-radius: 10px; width: 250px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .btn { padding: 5px 10px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+        .delete { background: red; color: white; }
+        .update { background: blue; color: white; }
+        .add { background: green; color: white; margin-top: 20px; }
+
+        img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ username }}! 🛍️</h1>
+    <h2>Add a New Product</h2>
+
+    {% for message in messages %}
+        <p style="color: green;">{{ message }}</p>
+    {% endfor %}
+
+    <!-- Add Product Form -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Product Name" required><br><br>
+        <textarea name="description" placeholder="Product Description" required></textarea><br><br>
+        <input type="number" step="0.01" name="price" placeholder="Price" required><br><br>
+
+        <!-- ✅ Category Selection -->
+        <select name="category" required>
+            <option value="electronics">Electronics</option>
+            <option value="fashion">Fashion</option>
+            <option value="grocery">Grocery</option>
+            <option value="books">Books</option>
+            <option value="footwear">Footwear</option>
+            <option value="bag">Bag</option>
+            <option value="other">Other</option>
+        </select><br><br>
+
+        <input type="file" name="image" accept="image/*"><br><br>
+        <button type="submit" name="add_product" class="btn add">Add Product</button>
+    </form>
+
+    <hr>
+    <h2>Your Products</h2>
+
+    <!-- ✅ Product grid for 4 per row -->
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% endif %}
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p><strong>${{ product.price }}</strong></p>
+                <p>Category: {{ product.category|title }}</p>
+
+                <!-- Update Product Form -->
+                <form method="POST" enctype="multipart/form-data" style="margin-bottom:10px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <input type="text" name="name" value="{{ product.name }}" required><br><br>
+                    <textarea name="description" required>{{ product.description }}</textarea><br><br>
+                    <input type="number" step="0.01" name="price" value="{{ product.price }}" required><br><br>
+
+                    <select name="category" required>
+                        <option value="electronics" {% if product.category == 'electronics' %}selected{% endif %}>Electronics</option>
+                        <option value="fashion" {% if product.category == 'fashion' %}selected{% endif %}>Fashion</option>
+                        <option value="grocery" {% if product.category == 'grocery' %}selected{% endif %}>Grocery</option>
+                        <option value="books" {% if product.category == 'books' %}selected{% endif %}>Books</option>
+                        <option value="footwear" {% if product.category == 'footwear' %}selected{% endif %}>Footwear</option>
+                        <option value="bag" {% if product.category == 'bag' %}selected{% endif %}>Bag</option>
+                        <option value="other" {% if product.category == 'other' %}selected{% endif %}>Other</option>
+                    </select><br><br>
+
+                    <input type="file" name="image" accept="image/*"><br><br>
+                    <button type="submit" name="update_product" class="btn update">Update</button>
+                </form>
+
+                <!-- Delete Product Form -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <button type="submit" name="delete_product" class="btn delete">Delete</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>No products added yet.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

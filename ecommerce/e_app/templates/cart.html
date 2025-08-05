@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; text-align:center; }
+        table { margin:20px auto; border-collapse: collapse; width:70%; }
+        th, td { padding:10px; border:1px solid #ccc; }
+        th { background:#eee; }
+        .total { font-weight:bold; }
+        .checkout-btn {
+            margin-top: 20px; padding: 10px 20px; background: green;
+            color: white; border: none; border-radius: 5px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Shopping Cart</h1>
+    {% if cart_items %}
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>₹{{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.product.price|floatformat:2|add:item.quantity|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td colspan="3">Total</td>
+            <td>₹{{ total }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'checkout' %}"><button class="checkout-btn">Proceed to Checkout</button></a>
+    
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+    <br>
+    <a href="{% url 'customer' %}">← Back to Shop</a>
+</body>
+</html>

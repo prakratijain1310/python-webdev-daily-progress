@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .payment-btn {
+            padding: 10px 20px; margin: 10px;
+            background: #4CAF50; color: white;
+            border: none; border-radius: 5px; cursor: pointer;
+        }
+        .payment-btn:hover { background: #45a049; }
+        .cod { background: orange; }
+        .qr img { margin-top: 20px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Checkout - {{ username }} 🧾</h1>
+
+    <h2>Total Amount: ₹{{ total_amount }}</h2>
+
+    {% if show_payment_options %}
+        <form method="POST">
+            {% csrf_token %}
+            <button class="payment-btn cod" name="payment_method" value="COD">Cash on Delivery</button>
+            <button class="payment-btn" name="payment_method" value="UPI">Online Payment (UPI)</button>
+        </form>
+    {% endif %}
+
+    {% if qr_code %}
+        <div class="qr">
+            <h3>Scan to Pay</h3>
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+        </div>
+        <script>
+            setTimeout(() => {
+                alert("Order Confirmed ✅");
+                window.location.href = "{% url 'customer' %}";
+            }, 3000);
+        </script>
+    {% endif %}
+</body>
+</html>
